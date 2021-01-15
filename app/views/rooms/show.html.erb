@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<%= turbo_stream_from @room %>
+
+<%= turbo_frame_tag 'room' do %>
+  <p>
+    <strong>Name:</strong>
+    <%= @room.name %>
+  </p>
+
+  <p>
+    <%= link_to 'Edit', edit_room_path(@room) %> |
+    <%= link_to 'Back', rooms_path, 'data-turbo-frame': '_top' %>
+  </p>
+<% end %>
+
+<div id="messages">
+  <%= render @room.messages %>
+</div>
+
+<%= turbo_frame_tag 'new_message', src: new_room_message_path(@room) %>
+
+<button onclick="document.querySelector('#stream_messages_sentinel').style.display='block'">start</button>
+<div id="stream_messages"></div>
+<div id="stream_messages_sentinel" style="background-color: red; height: 20px; color: white; display: none">
+  <%= turbo_frame_tag 'stream_messages_loading', src: room_messages_path(@room), loading: 'lazy' do %>
+    Loading...
+  <% end %>
+</div>
